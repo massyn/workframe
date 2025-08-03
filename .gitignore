@@ -205,3 +205,20 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# WorkFrame specific
+# Database files
+workframe.db
+workframe.db-journal
+*.db
+*.db-journal
+
+# Test artifacts (keep tests/ directory)
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Development utilities
+reset_database.py
+.claude
+claude.md

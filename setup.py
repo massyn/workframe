@@ -28,7 +28,7 @@ setup(
     long_description_content_type="text/markdown",
     author="WorkFrame Contributors",
     author_email="workframe@example.com",
-    url="https://github.com/yourusername/workframe",
+    url="https://github.com/massyn/workframe",
     license="MIT",
     packages=find_packages(),
     include_package_data=True,
@@ -67,8 +67,8 @@ setup(
     ],
     keywords="flask framework business crud web application",
     project_urls={
-        "Bug Tracker": "https://github.com/yourusername/workframe/issues",
-        "Documentation": "https://github.com/yourusername/workframe",
-        "Source Code": "https://github.com/yourusername/workframe",
+        "Bug Tracker": "https://github.com/massyn/workframe/issues",
+        "Documentation": "https://github.com/massyn/workframe",
+        "Source Code": "https://github.com/massyn/workframe",
     },
 )

@@ -50,10 +50,10 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/workframe"
-Documentation = "https://github.com/yourusername/workframe"
-Repository = "https://github.com/yourusername/workframe"
-"Bug Tracker" = "https://github.com/yourusername/workframe/issues"
+Homepage = "https://github.com/massyn/workframe/"
+Documentation = "https://github.com/massyn/workframe/"
+Repository = "https://github.com/massyn/workframe/"
+"Bug Tracker" = "https://github.com/massyn/workframe/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]

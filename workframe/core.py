@@ -97,6 +97,10 @@ class WorkFrame:
         self.login_manager = LoginManager()
         
         self._init_extensions()
+        
+        # Initialize models and user loader BEFORE registering routes
+        self._init_models()
+        
         self._register_error_handlers()
         self._register_routes()
         self._register_auth_blueprint()
@@ -108,9 +112,6 @@ class WorkFrame:
         
         # Store table models for lookup resolution
         self.table_models = {}
-        
-        # Initialize models
-        self._init_models()
         
         # Create admin modules (routes need to be registered before app starts)
         self._create_admin_modules()
@@ -395,19 +396,27 @@ class WorkFrame:
         admin_paths = [module.get('url_prefix', '') for module in self.admin_modules]
         
         if '/admin/users' not in admin_paths:
-            # Create enhanced user management with integrated group management
-            from .views.user_management_module import UserManagementModule
+            # Create user management CRUD with full functionality
+            user_fields = [
+                Field('username', required=True),
+                Field('email', type='email', required=True),
+                Field('first_name', optional=True),
+                Field('last_name', optional=True),
+                Field('password', type='password', required=True, hidden_in_list=True),
+                Field('is_admin', type='boolean', default=False),
+                Field('is_active', type='boolean', default=True),
+                Field('created_at', readonly=True, hidden_in_form=True, type='datetime')
+            ]
             
-            # Create enhanced user module with group management
-            users_admin = UserManagementModule(
-                user_model=self.User,
-                group_model=self.Group,
-                db=self.db,
-                name='admin_users',
-                admin_required=True
-            )
+            # Create admin users module
+            users_admin = crud('admin_users', user_fields, admin_required=True)
+            users_admin.table.model = self.User
+            users_admin.table.table_name = 'users'
+            users_admin.table.db = self.db
             
-            # Register the enhanced module
+            # Register the model in the table registry for lookups
+            self.table_models['admin_users'] = self.User
+            
             self.app.register_blueprint(users_admin.blueprint, url_prefix='/admin/users')
             
             module_info = {
@@ -432,6 +441,9 @@ class WorkFrame:
             groups_admin.table.model = self.Group
             groups_admin.table.table_name = 'groups'
             groups_admin.table.db = self.db
+            
+            # Register the model in the table registry for lookups
+            self.table_models['admin_groups'] = self.Group
             
             self.app.register_blueprint(groups_admin.blueprint, url_prefix='/admin/groups')
             

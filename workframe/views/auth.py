@@ -66,6 +66,68 @@ def create_auth_blueprint(app):
         """User profile page."""
         return render_template('auth/profile.html', user=current_user)
     
+    @auth.route('/profile/edit', methods=['GET', 'POST'])
+    @login_required
+    def edit_profile():
+        """Edit user profile page."""
+        # Use the existing User model from the app instead of recreating it
+        User = app.User
+        
+        if request.method == 'POST':
+            # Get form data
+            first_name = request.form.get('first_name', '').strip()
+            last_name = request.form.get('last_name', '').strip()
+            email = request.form.get('email', '').strip()
+            
+            # Validate email is provided
+            if not email:
+                flash('Email is required.', 'danger')
+                return render_template('auth/edit_profile.html', user=current_user)
+            
+            # Check if email is already taken by another user
+            existing_user = User.query.filter(User.email == email, User.id != current_user.id).first()
+            if existing_user:
+                flash('This email is already in use by another account.', 'danger')
+                return render_template('auth/edit_profile.html', user=current_user)
+            
+            # Update user profile
+            current_user.first_name = first_name or None
+            current_user.last_name = last_name or None
+            current_user.email = email
+            
+            app.db.session.commit()
+            flash('Profile updated successfully!', 'success')
+            return redirect(url_for('auth.profile'))
+        
+        return render_template('auth/edit_profile.html', user=current_user)
+    
+    @auth.route('/profile/change-password', methods=['GET', 'POST'])
+    @login_required
+    def change_password():
+        """Change user password page."""
+        if request.method == 'POST':
+            new_password = request.form.get('new_password', '')
+            confirm_password = request.form.get('confirm_password', '')
+            
+            # Validate new password
+            if len(new_password) < 3:
+                flash('Password must be at least 3 characters long.', 'danger')
+                return render_template('auth/change_password.html')
+            
+            # Validate password confirmation
+            if new_password != confirm_password:
+                flash('Passwords do not match.', 'danger')
+                return render_template('auth/change_password.html')
+            
+            # Update password
+            current_user.set_password(new_password)
+            app.db.session.commit()
+            
+            flash('Password changed successfully!', 'success')
+            return redirect(url_for('auth.profile'))
+        
+        return render_template('auth/change_password.html')
+    
     return auth
 
 

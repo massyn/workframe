@@ -5,7 +5,7 @@ A framework that focuses on business logic while handling all the web applicatio
 Zero ceremony, convention over configuration, with escape hatches for customization.
 """
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __author__ = "WorkFrame Contributors"
 __email__ = "workframe@example.com"
 

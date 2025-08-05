@@ -112,15 +112,15 @@
                 <div class="row mt-4">
                     <div class="col-12">
                         <div class="d-flex gap-2 flex-wrap">
-                            <button type="button" class="btn btn-outline-primary" disabled>
+                            <a href="{{ url_for('auth.edit_profile') }}" class="btn btn-primary">
                                 <i class="bi bi-pencil me-1"></i>Edit Profile
-                            </button>
-                            <button type="button" class="btn btn-outline-secondary" disabled>
+                            </a>
+                            <a href="{{ url_for('auth.change_password') }}" class="btn btn-outline-secondary">
                                 <i class="bi bi-key me-1"></i>Change Password
-                            </button>
+                            </a>
                         </div>
                         <small class="text-muted mt-2 d-block">
-                            Profile editing will be available in future versions.
+                            <i class="bi bi-info-circle me-1"></i>You can update your profile information and change your password.
                         </small>
                     </div>
                 </div>

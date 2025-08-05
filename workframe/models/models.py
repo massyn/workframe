@@ -70,23 +70,31 @@ def create_models(db):
             else:
                 return self.username
         
-        @property
-        def is_authenticated(self):
-            """Required by Flask-Login."""
-            return True
-        
-        @property
-        def is_anonymous(self):
-            """Required by Flask-Login."""
-            return False
-        
         def get_id(self):
-            """Required by Flask-Login."""
+            """Required by Flask-Login - return user ID as string."""
             return str(self.id)
         
         def has_group(self, group_name):
             """Check if user belongs to a specific group."""
             return any(group.name == group_name for group in self.groups)
+        
+        @classmethod
+        def from_dict(cls, data):
+            """Create User instance from dictionary with proper password handling."""
+            # Create a copy to avoid modifying original data
+            user_data = data.copy()
+            
+            # Handle password field specially
+            password = user_data.pop('password', None)
+            
+            # Create user instance
+            user = cls(**user_data)
+            
+            # Set password if provided (this will hash it)
+            if password:
+                user.set_password(password)
+            
+            return user
         
         def __repr__(self):
             return f'<User {self.username}>'
@@ -129,6 +137,11 @@ def create_models(db):
         def user_count(self):
             """Get number of users in this group."""
             return len(self.users)
+        
+        @classmethod
+        def from_dict(cls, data):
+            """Create Group instance from dictionary."""
+            return cls(**data)
         
         def __repr__(self):
             return f'<Group {self.name}>'
